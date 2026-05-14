@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap') layer(base);
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -5,7 +7,44 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        'Urbanist', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --color-primary-50: #f5fff4;
+    --color-primary-100: #e6ffec;
+    --color-primary-200: #ccffd8;
+    --color-primary-300: #99ffad;
+    --color-primary-400: #80ff94;
+    --color-primary-500: #66ff4c;
+    --color-primary-600: #59e644;
+    --color-primary-700: #4cc63b;
+    --color-primary-800: #3e9e32;
+    --color-primary-900: #307729;
+    --color-primary-950: #1c4e1f;
+}
+
+@layer base {
+    :root {
+        font-size: 13px;
+    }
+    html,
+    body {
+        @apply flex h-full flex-col scroll-smooth bg-zinc-100 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200;
+    }
+    body {
+        font-family: var(--font-sans);
+    }
+}
+
+@utility no-scrollbar {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
