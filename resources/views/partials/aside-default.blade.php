@@ -1,8 +1,8 @@
 @php
     $menu = config('menu');
     $tabs = [
-        'dashboard' => ['id' => 'dashboard', 'title' => 'Dashboard', 'icon' => 'Home09'],
-        'apps' => ['id' => 'apps', 'title' => 'Apps', 'icon' => 'GridView'],
+        'dashboard' => ['id' => 'dashboard', 'title' => 'Dashboards', 'icon' => 'Home09'],
+        'apps' => ['id' => 'apps', 'title' => 'CRUDs', 'icon' => 'GridView'],
         'documentation' => ['id' => 'documentation', 'title' => 'Documentation', 'icon' => 'BookBookmark02'],
         'examples' => ['id' => 'examples', 'title' => 'Examples', 'icon' => 'Star'],
     ];
@@ -15,10 +15,14 @@
         <div class="mb-4" x-show="$store.aside.status">
             <x-form.field-wrap
                 first-icon="Search01"
-                :last-suffix="'<span class=\'text-sm\'>⌘K</span>'"
-                class="py-3"
+                :last-suffix="'<span class=\'text-sm text-zinc-500\'>⌘K</span>'"
             >
-                <x-form.input name="search" type="search" placeholder="Search" />
+                <x-form.input
+                    name="search"
+                    type="search"
+                    placeholder="Search"
+                    class="!border-zinc-500/25 transition-all duration-300 ease-in-out hover:!border-zinc-500/50"
+                />
             </x-form.field-wrap>
         </div>
         <button
@@ -43,6 +47,7 @@
             <template x-if="$store.aside.activeTab === 'dashboard'">
                 <div>
                     <x-nav.title>Dashboards</x-nav.title>
+                    <x-nav.item icon="Home09" text="Dashboard" :to="route('dashboard')" />
                     <x-nav.item :icon="$menu['apps']['sales']['icon']" :text="$menu['apps']['sales']['text']" :to="$menu['apps']['sales']['to']" />
                     <x-nav.item :icon="$menu['apps']['customer']['icon']" :text="$menu['apps']['customer']['text']" :to="$menu['apps']['customer']['to']" />
                     <x-nav.item :icon="$menu['apps']['products']['icon']" :text="$menu['apps']['products']['text']" :to="$menu['apps']['products']['to']">
@@ -59,23 +64,13 @@
                 </div>
             </template>
 
-            {{-- APPS TAB (also dashboard) --}}
-            <template x-if="$store.aside.activeTab === 'dashboard' || $store.aside.activeTab === 'apps'">
+            {{-- CRUDS TAB --}}
+            <template x-if="$store.aside.activeTab === 'apps'">
                 <div>
-                    <x-nav.title>Apps</x-nav.title>
-                    @foreach ($menu['apps'] as $app)
-                        @if (! empty($app['subPages']))
-                            <x-nav.collapse :icon="$app['icon']" :text="$app['text']" :to="$app['to']">
-                                <x-nav.item :icon="$app['icon']" :text="$app['text']" :to="$app['to']" />
-                                @foreach ($app['subPages'] as $sub)
-                                    <x-nav.item :icon="$sub['icon']" :text="$sub['text']" :to="$sub['to']" />
-                                @endforeach
-                            </x-nav.collapse>
-                        @else
-                            <x-nav.item :icon="$app['icon']" :text="$app['text']" :to="$app['to']" />
-                        @endif
+                    <x-nav.title>Entities</x-nav.title>
+                    @foreach ($menu['entities'] as $entity)
+                        <x-nav.item :icon="$entity['icon']" :text="$entity['text']" :to="$entity['to']" />
                     @endforeach
-                    <x-nav.separator />
                 </div>
             </template>
 

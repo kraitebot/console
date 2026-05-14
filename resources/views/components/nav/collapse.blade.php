@@ -6,7 +6,8 @@
 ])
 @php
     $currentPath = '/' . trim(request()->path(), '/');
-    $here = $to !== '/' && str_starts_with($currentPath, rtrim($to, '/'));
+    $matchTo = rtrim($to, '/');
+    $hereInitial = $to !== '/' && str_starts_with($currentPath, $matchTo);
     $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border grow transition-all duration-300 ease-in-out';
     $hereClass = 'text-zinc-950 dark:text-zinc-100 border-transparent';
     $inactiveClass = 'border-transparent text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100';
@@ -26,14 +27,15 @@
 @endphp
 <li
     data-component-name="Nav/NavCollapse"
-    x-data="{ open: {{ $here ? 'true' : 'false' }} }"
+    x-data="{ open: {{ $hereInitial ? 'true' : 'false' }}, touched: false }"
+    x-effect="if (! touched) open = $store.navigation.path.startsWith(@js($matchTo)) && @js($matchTo) !== '/'"
     class="relative list-none group"
 >
     <div
         role="presentation"
-        @click="open = !open"
+        @click="open = !open; touched = true"
         class="{{ $base }}"
-        :class="open ? '{{ $hereClass }}' : '{{ $inactiveClass }}'"
+        :class="open ? @js($hereClass) : @js($inactiveClass)"
     >
         @if ($icon)
             <span

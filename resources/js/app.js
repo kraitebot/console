@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
+import '@hotwired/turbo';
 
 Alpine.plugin(collapse);
 
@@ -14,6 +15,10 @@ Alpine.store('aside', {
         this.activeTab = id;
         localStorage.setItem('bolt_activeTab', id);
     },
+});
+
+Alpine.store('navigation', {
+    path: window.location.pathname,
 });
 
 Alpine.store('theme', {
@@ -36,3 +41,7 @@ Alpine.store('theme', {
 
 window.Alpine = Alpine;
 Alpine.start();
+
+document.addEventListener('turbo:load', () => {
+    Alpine.store('navigation').path = window.location.pathname;
+});

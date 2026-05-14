@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'entities' => [
+        'users' => ['id' => 'users', 'to' => '/users', 'text' => 'Users', 'icon' => 'UserMultiple'],
+    ],
+
     'apps' => [
         'sales' => [
             'id' => 'sales', 'to' => '/sales', 'text' => 'Sales', 'icon' => 'Store04',

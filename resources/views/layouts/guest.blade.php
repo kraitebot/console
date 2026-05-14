@@ -18,20 +18,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body x-data class="font-sans antialiased">
-
-    <div id="aside-permanent" data-turbo-permanent>
-        @include('partials.aside-default')
-    </div>
-
-    <x-wrapper>
-        @yield('header')
-
-        @hasSection('subheader')
-            @yield('subheader')
-        @endif
-
+    <div class="flex h-full items-center justify-center bg-zinc-100 dark:bg-zinc-950">
         @yield('content')
-    </x-wrapper>
-
+    </div>
 </body>
 </html>

@@ -24,6 +24,12 @@
             <button type="button" aria-label="Notifications" class="text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100">
                 <span class="inline-flex text-2xl leading-none">@include('icons.Notification03')</span>
             </button>
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit" aria-label="Logout" class="text-zinc-500 hover:text-red-500">
+                    <span class="inline-flex text-2xl leading-none">@include('icons.Login03')</span>
+                </button>
+            </form>
         </x-header.right>
     </x-header>
 @endsection

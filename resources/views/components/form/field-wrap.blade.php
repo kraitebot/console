@@ -1,14 +1,38 @@
 @props(['firstIcon' => null, 'lastIcon' => null, 'firstSuffix' => null, 'lastSuffix' => null])
-<div {{ $attributes->class(['flex items-center gap-2 rounded-xl border border-zinc-500/25 bg-white px-3 py-2 transition-all duration-300 ease-in-out hover:border-zinc-500/50 dark:bg-zinc-900']) }}>
-    @if ($firstIcon)
-        <x-icon :name="$firstIcon" class="text-zinc-500" />
-    @elseif ($firstSuffix)
-        <span class="text-zinc-500">{!! $firstSuffix !!}</span>
+@php
+    $hasFirst = $firstIcon || $firstSuffix;
+    $hasLast = $lastIcon || $lastSuffix;
+@endphp
+<div
+    data-component-name="FieldWrap"
+    x-data="{}"
+    x-init="$nextTick(() => {
+        const input = $el.querySelector('input, textarea, select');
+        if (!input) return;
+        const f = $refs.first;
+        const l = $refs.last;
+        if (f) input.style.paddingLeft = (f.offsetWidth + 16) + 'px';
+        if (l) input.style.paddingRight = (l.offsetWidth + 16) + 'px';
+    })"
+    {{ $attributes->class(['relative w-full']) }}
+>
+    @if ($hasFirst)
+        <div x-ref="first" class="absolute top-[2px] bottom-[2px] start-2 z-10 flex items-center justify-center rounded-sm px-1">
+            @if ($firstIcon)
+                <x-icon :name="$firstIcon" class="text-zinc-500" />
+            @else
+                {!! $firstSuffix !!}
+            @endif
+        </div>
     @endif
-    <div class="grow">{{ $slot }}</div>
-    @if ($lastIcon)
-        <x-icon :name="$lastIcon" class="text-zinc-500" />
-    @elseif ($lastSuffix)
-        <span class="text-zinc-500">{!! $lastSuffix !!}</span>
+    {{ $slot }}
+    @if ($hasLast)
+        <div x-ref="last" class="absolute top-[2px] bottom-[2px] end-2 z-10 flex items-center justify-center rounded-sm px-1">
+            @if ($lastIcon)
+                <x-icon :name="$lastIcon" class="text-zinc-500" />
+            @else
+                {!! $lastSuffix !!}
+            @endif
+        </div>
     @endif
 </div>

@@ -8,12 +8,12 @@
 ])
 @php
     $currentPath = '/' . trim(request()->path(), '/');
-    $here = $isActiveOverwrite || ($to && $currentPath === rtrim($to, '/'));
-    $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 grow transition-all duration-300 ease-in-out';
-    $stateClass = $here
-        ? 'border-zinc-300 text-zinc-950 dark:border-zinc-800 dark:text-zinc-100'
-        : 'border-transparent';
-    $linkClass = $base . ' ' . $stateClass;
+    $matchTo = $to ? rtrim($to, '/') : null;
+    $hereInitial = $isActiveOverwrite || ($to && $currentPath === $matchTo);
+    $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 grow transition-all duration-300 ease-in-out focus:outline-none';
+    $activeCls = 'border-zinc-300 text-zinc-950 dark:border-zinc-800 dark:text-zinc-100';
+    $inactiveCls = 'border-transparent';
+    $initialState = $hereInitial ? $activeCls : $inactiveCls;
     $iconColorClass = match ($iconColor) {
         'primary' => 'text-primary-500',
         'zinc' => 'text-zinc-500',
@@ -34,9 +34,17 @@
     :class="$store.aside.status ? '[.group_&]:ps-4' : ''"
 >
     @if ($to)
-        <a href="{{ $to }}" class="{{ $linkClass }}">
+        <a
+            href="{{ $to }}"
+            class="{{ $base }} {{ $initialState }}"
+            :class="@js($isActiveOverwrite) || $store.navigation.path === @js($matchTo) ? @js($activeCls) : @js($inactiveCls)"
+        >
     @else
-        <button type="button" class="{{ $linkClass }}">
+        <button
+            type="button"
+            class="{{ $base }} {{ $initialState }}"
+            :class="@js($isActiveOverwrite) ? @js($activeCls) : @js($inactiveCls)"
+        >
     @endif
         <template x-if="$store.aside.status">
             <div class="absolute start-[0.125rem] -top-[100vh] bottom-[calc(50%+0.25rem)] hidden w-[0.8125rem] border-s border-b border-zinc-300 ltr:rounded-bl-[10px] rtl:rounded-br-[10px] dark:border-zinc-700 [.group_&]:block"></div>
