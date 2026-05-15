@@ -2,6 +2,12 @@
 
 All notable changes to `console.kraite.com` are documented here.
 
+## v0.0.3 — 2026-05-15
+
+### Improvements
+
+- [IMPROVED] Override `--color-zinc-500` theme token from Tailwind default `#71717a` to `#909099`. Secondary text (table cells like email + joined-at, soft-zinc badges, breadcrumb non-active items, card subtitles, form descriptions) was too faded. Brighter shade applies globally to every `text-zinc-500` / `bg-zinc-500` / `border-zinc-500` site-wide.
+
 ## v0.0.2 — 2026-05-15
 
 ### Features

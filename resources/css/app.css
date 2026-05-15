@@ -26,6 +26,9 @@
     --color-primary-800: #3e9e32;
     --color-primary-900: #307729;
     --color-primary-950: #1c4e1f;
+
+    /* Muted-text override — Tailwind default zinc-500 (#71717a) felt too faded for secondary table cells, badges, breadcrumbs. Bumped one shade brighter, between zinc-400 (#a1a1aa) and zinc-500. Applies globally to text-zinc-500, bg-zinc-500, border-zinc-500, etc. */
+    --color-zinc-500: #909099;
 }
 
 @layer base {
