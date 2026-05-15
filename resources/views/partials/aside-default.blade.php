@@ -8,7 +8,7 @@
     ];
 @endphp
 
-<x-aside>
+<x-aside id="aside-permanent" data-turbo-permanent>
     @include('partials.aside-header')
 
     <x-aside.body>

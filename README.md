@@ -1,58 +1,97 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kraite Console
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sysadmin admin console for the Kraite trading platform. Deployed at **`console.kraite.com`** (production target).
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Laravel 13** (PHP 8.4)
+- **Blade** for server-rendered templating — Inertia/React framing is intentionally **not** used here
+- **Alpine.js 3** + `@alpinejs/collapse` for client-side interactivity
+- **Tailwind 4** (Oxide) via `@tailwindcss/vite`
+- **Vite** for the asset pipeline
+- **Pest 4** for tests (when business logic lands)
+- Hotwired **Turbo** for SPA-style navigation across the admin shell
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## What it does
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Console is the **operator UI** for Kraite — separate from the trader-facing `admin.kraite.com`. It is the modern successor to the legacy `/system/*` Blade screens on `admin.kraite.com`. Today's surface:
 
-## Learning Laravel
+- `/login` — Fortify-style email/password auth, guarded by `EnsureUserIsAdmin` middleware. Non-admins are bounced to the trader URL.
+- `/dashboard` — operator overview (placeholder pending real widgets).
+- `/users` — datagrid over the shared `kraite` users table (paginate / search / sort / row-click → detail).
+- `/users/create` — add user form (Boltify "Add & Create" pattern).
+- `/users/{user}?tab=details|accounts|positions|billing` — tabbed user detail with edit form on the Details tab; other tabs queued as stubs.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+More `/system/*` surfaces (sql-query, commands, steps, lifecycle, backtracking, billing-admin) are documented at `~/Herd/docs/kraite/05-console/` and will land incrementally — that doc set is mid-rewrite.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Data ownership — hard rule
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+**Console has NO database of its own and NO factories.** All domain data (users, accounts, positions, exchanges, symbols) is owned by `ingestion.kraite.test` locally and by zeus in production. Console is a thin Blade/Alpine UI that reads (and writes via console-local model views) the same MySQL `kraite` database.
 
-## Agentic Development
+- **No migrations in this repo.** Schema changes go into `~/Herd/ingestion.kraite.test/database/migrations/` or the `kraitebot/core` package.
+- **No factories or seeders.** Test data comes from ingestion.
+- **`App\Models\User` is the console-local auth view** of the shared `users` table — fillable on `name`, `email`, `password`, `is_admin`, `status`.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## UI build discipline
+
+This repo is a **port** of the Boltify React/TypeScript admin template (`~/Herd/boltify.test`) into Blade + Alpine + Tailwind 4. **UI is not invented here** — every component cites its Boltify source path + class/function anchor. The full porting playbook lives in `CLAUDE.md` and the component inventory at `~/Herd/docs/kraite/05-console/components/`.
+
+Highlights:
+
+- Components live in `resources/views/components/` with folder-nested naming (`<x-card.header>`, `<x-form.input>`, `<x-table.tr>`).
+- Every component root carries `data-component-name="..."`.
+- Dynamic Tailwind classes are written as `match()` returning literal strings (Tailwind 4's scanner purges concatenated strings).
+- Alpine stores own client-side state: `$store.aside` (sidebar open/closed, active tab) and `$store.theme` (light/dark/system + `cycle()`).
+- `[x-cloak] { display: none !important; }` is in the CSS base layer to suppress Alpine-bound popover flashes.
+
+## Build & dev
 
 ```bash
-composer require laravel/boost --dev
+npm install
+composer install
 
-php artisan boost:install
+npm run dev      # Vite HMR
+npm run build    # Production assets → public/build/
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+After any Blade / CSS / JS edit, run `npm run build` before reloading the page.
 
-## Contributing
+## Repo layout
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+app/
+├── Http/
+│   ├── Controllers/         # LoginController, UsersController
+│   ├── Middleware/          # EnsureUserIsAdmin
+│   └── Requests/            # UserRequest
+└── Models/                  # User (auth-only)
 
-## Code of Conduct
+resources/
+├── views/
+│   ├── components/          # Blade components ported from Boltify
+│   ├── icons/               # HugeIcons SVGs (extracted via scripts/extract-icons.sh)
+│   ├── layouts/             # app.blade.php + admin.blade.php
+│   ├── partials/            # aside + header partials
+│   └── users/               # index / show / create
+├── css/app.css              # Tailwind 4 entry + theme tokens (Urbanist, primary green, 13px root)
+└── js/app.js                # Alpine stores
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+routes/web.php               # /login + /logout + /dashboard + /users (CRUD subset)
+config/menu.php              # Blade-side equivalent of Boltify's pages.ts (nav metadata)
+scripts/extract-icons.sh     # Extract HugeIcons SVGs from boltify.test into Blade partials
+```
 
-## Security Vulnerabilities
+## Reference
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Boltify source: `~/Herd/boltify.test`
+- Console functional docs (rewrite in progress): `~/Herd/docs/kraite/05-console/`
+- Component inventory: `~/Herd/docs/kraite/05-console/components/README.md`
+- Sister Kraite apps:
+  - `ingestion.kraite.test` (trading engine — scheduler + dispatcher + queue workers)
+  - `admin.kraite.test` (legacy operator + trader Blade UI)
+  - `kraite.test` (public marketing)
+  - `syntax.kraite.test` (public Next.js docs)
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT.

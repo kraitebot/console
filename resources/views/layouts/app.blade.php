@@ -19,9 +19,7 @@
 </head>
 <body x-data class="font-sans antialiased">
 
-    <div id="aside-permanent" data-turbo-permanent>
-        @include('partials.aside-default')
-    </div>
+    @include('partials.aside-default')
 
     <x-wrapper>
         @yield('header')

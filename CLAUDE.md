@@ -8,6 +8,40 @@ This file extends `~/.claude-personal/CLAUDE.md`. Repo-specific rules below take
 
 The Inertia/React SPA design described in earlier `Herd/docs/kraite/05-console/` docs is **dead**. Current stack is Blade + Alpine. Trust the code, not the old docs (which are being rewritten alongside this CLAUDE.md).
 
+## Data ownership — hard rule
+
+**Console has NO database of its own and NO factories.** All domain data (users, accounts, positions, exchanges, symbols, anything) is owned by **`ingestion.kraite.test`** locally and by zeus in production. Console is a thin Blade/Alpine UI that reads (and writes through ingestion-owned models) the same MySQL database (`DB_DATABASE=kraite`).
+
+What this means in practice:
+- **Do NOT create migrations in this repo.** The three skeleton migrations (`create_users_table`, `create_cache_table`, `create_jobs_table`) are vestigial — they will be removed. Schema changes belong in `~/Herd/ingestion.kraite.test/database/migrations/`.
+- **Do NOT create model factories or seeders here.** Test data comes from ingestion's seeders. The console-local `UserFactory` is vestigial.
+- **Do NOT create local models that shadow ingestion's domain.** When a domain model (e.g. `User`, `Account`, `Position`) is needed, source it from the ingestion-owned package (currently `kraitebot/core` in ingestion's vendor tree) once console pulls it in via composer. Until then, ask Bruno before adding any model.
+- Console's `.env` must point `DB_*` at the same `kraite` database ingestion uses. If it doesn't, login is broken and any "Users" read returns empty.
+- Auth tables (`users`, `sessions`, `password_reset_tokens`) are owned by ingestion and shared with console — console never migrates them.
+
+If a feature seems to need a console-local table, **stop and ask Bruno**. The only documented exception (legacy doc) is the Lifecycle scenario configurator, and even that is on hold.
+
+## First-pass UI policy
+
+When Bruno asks for a **new UI feature** (page, datagrid, detail view, form, etc.), **ship a first pass without question-gating**. The flow is:
+
+1. Read Boltify reference end-to-end (the "no vibe coding" rule still applies — it's about reading, not asking).
+2. Make every implementation decision yourself: column shape, copy, placeholder text, route names, stub content, where the "New X" button goes, what the detail page shows.
+3. Use sensible Kraite-shape defaults: server-paginated tables, search by `name|email`, sortable headers, breadcrumb in the subheader, "New X" button on the right.
+4. Build it, `npm run build`, report what shipped.
+5. Bruno iterates by saying "change X" — refinement comes after the first pass exists, not before.
+
+**Only ask** when the question is **strictly necessary**, meaning the answer changes the data model, the URL scheme, or whether the feature should even exist. Examples:
+
+| Worth asking | NOT worth asking |
+|---|---|
+| "Real users from ingestion or seeded fakes?" (data source) | "What columns should the table have?" — pick Kraite-shape defaults |
+| "Should `/users/{user}` exist as a route?" (URL scheme) | "What should the detail page look like?" — ship a first pass |
+| "Is this a console-owned table or ingestion-owned?" (data ownership) | "Should the Edit button be a pencil icon?" — yes, match Boltify |
+| "Mid tier or full tier (column visibility + bulk select)?" (feature scope) | "Should pageSize default to 10 or 20?" — pick 10, Boltify default |
+
+Bias toward shipping. A "wrong" first pass that Bruno corrects in one turn is faster than a Q&A pre-amble that delays the first paint.
+
 ## The Boltify rule — non-negotiable
 
 **You do NOT invent UI. You port from Boltify.**

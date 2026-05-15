@@ -26,7 +26,12 @@ ICONS=(
     # Pages examples
     Login03 AddTeam HelpSquare
     # UI controls
-    ArrowDown01 Search01 PlusSignCircle Filter
+    ArrowDown01 Search01 Search02 PlusSignCircle Filter
+    # Datagrid (Users)
+    Sorting01 Sorting02 Sorting05
+    ArrowLeft01 ArrowLeftDouble ArrowRight01 ArrowRightDouble
+    # Forms (User edit/create)
+    FloppyDisk Tick02
     # Header right
     Notification03 LanguageSquare Sun03 Moon02 Computer
     # Misc used in /customer dashboard

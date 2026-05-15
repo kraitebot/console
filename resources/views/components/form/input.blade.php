@@ -32,7 +32,7 @@
     @if($value !== null) value="{{ $value }}" @endif
     placeholder="{{ $placeholder }}"
     {{ $attributes->class([
-        'w-full peer block appearance-none outline-0 text-black dark:text-white disabled:pointer-events-none disabled:opacity-50',
+        'w-full peer block appearance-none outline-0 text-zinc-700 dark:text-zinc-200 disabled:pointer-events-none disabled:opacity-50',
         $variantClass,
         $dimensionClass,
         $roundedClass,
