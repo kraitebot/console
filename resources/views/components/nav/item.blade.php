@@ -8,10 +8,15 @@
 ])
 @php
     $currentPath = '/' . trim(request()->path(), '/');
-    $matchTo = $to ? rtrim($to, '/') : null;
-    $hereInitial = $isActiveOverwrite || ($to && $currentPath === $matchTo);
-    $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 grow transition-all duration-300 ease-in-out focus:outline-none';
-    $activeCls = 'border-zinc-300 text-zinc-950 dark:border-zinc-800 dark:text-zinc-100';
+    $toPath = $to ? (parse_url($to, PHP_URL_PATH) ?: '/') : null;
+    $matchTo = $toPath ? rtrim($toPath, '/') : null;
+    $matchTo = $matchTo === '' ? '/' : $matchTo;
+    $hereInitial = $isActiveOverwrite || ($to && (
+        $currentPath === $matchTo
+        || ($matchTo !== '/' && str_starts_with($currentPath, $matchTo . '/'))
+    ));
+    $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border text-zinc-500 hover:text-primary-500 grow transition-all duration-300 ease-in-out focus:outline-none';
+    $activeCls = 'border-primary-500/35 text-primary-500';
     $inactiveCls = 'border-transparent';
     $initialState = $hereInitial ? $activeCls : $inactiveCls;
     $iconColorClass = match ($iconColor) {
@@ -36,8 +41,11 @@
     @if ($to)
         <a
             href="{{ $to }}"
+            data-nav-link
+            @click="if (!($event.defaultPrevented || $event.button !== 0 || $event.metaKey || $event.ctrlKey || $event.shiftKey || $event.altKey)) $store.navigation.path = @js($matchTo); $store.pageTransition.navigate($event, @js($to))"
             class="{{ $base }} {{ $initialState }}"
-            :class="@js($isActiveOverwrite) || $store.navigation.path === @js($matchTo) ? @js($activeCls) : @js($inactiveCls)"
+            :class="@js($isActiveOverwrite) || $store.navigation.path === @js($matchTo) || (@js($matchTo) !== '/' && $store.navigation.path.startsWith(@js($matchTo) + '/')) ? @js($activeCls) : @js($inactiveCls)"
+            :aria-current="@js($isActiveOverwrite) || $store.navigation.path === @js($matchTo) || (@js($matchTo) !== '/' && $store.navigation.path.startsWith(@js($matchTo) + '/')) ? 'page' : null"
         >
     @else
         <button

@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="view-transition" content="same-origin" />
     <title>@yield('title', 'Kraite Console')</title>
+    @include('partials.favicon')
     <script>
         (function () {
             const mode = localStorage.getItem('theme') || 'system';
@@ -16,20 +17,30 @@
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
-<body x-data class="font-sans antialiased">
+<body x-data x-init="$store.theme.init()" class="font-sans antialiased">
 
-    @include('partials.aside-default')
+    <div data-component-name="AsidePersist" class="peer contents">
+        @persist('app-aside')
+            @include('partials.aside-default')
+        @endpersist
+    </div>
 
     <x-wrapper>
         @yield('header')
 
-        @hasSection('subheader')
-            @yield('subheader')
-        @endif
+        <x-page-transition>
+            @hasSection('subheader')
+                @yield('subheader')
+            @endif
 
-        @yield('content')
+            @yield('content')
+        </x-page-transition>
     </x-wrapper>
 
+    <x-toast-container />
+
+    @livewireScripts
 </body>
 </html>

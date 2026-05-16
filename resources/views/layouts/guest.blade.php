@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="view-transition" content="same-origin" />
     <title>@yield('title', 'Kraite Console')</title>
+    @include('partials.favicon')
     <script>
         (function () {
             const mode = localStorage.getItem('theme') || 'system';
@@ -16,10 +17,12 @@
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body x-data class="font-sans antialiased">
     <div class="flex h-full items-center justify-center bg-zinc-100 dark:bg-zinc-950">
         @yield('content')
     </div>
+    @livewireScripts
 </body>
 </html>

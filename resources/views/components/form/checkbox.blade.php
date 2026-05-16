@@ -37,7 +37,7 @@
     $switchOff = "bg-[url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCA4IDgiPjxjaXJjbGUgY3g9IjQiIGN5PSI0IiByPSIzIiBvcGFjaXR5PSIuMjUiLz48L3N2Zz4=\")]";
     $switchOn = "checked:bg-[url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCA4IDgiPjxjaXJjbGUgY3g9IjQiIGN5PSI0IiByPSIzIiBmaWxsPSIjZmZmIi8+PC9zdmc+\")]";
 
-    $base = 'cursor-pointer appearance-none border disabled:!opacity-25 transition-all duration-300 ease-in-out !transition-[background-position,border-color,background-color] border-zinc-200 dark:border-zinc-700 hover:border-blue-500 dark:hover:border-blue-500 bg-center bg-no-repeat bg-transparent';
+    $base = 'cursor-pointer appearance-none border disabled:!opacity-50 transition-all duration-300 ease-in-out !transition-[background-position,border-color,background-color] border-primary-500/35 hover:border-primary-500/60 disabled:border-zinc-300 dark:disabled:border-zinc-700 bg-center bg-no-repeat bg-transparent';
 
     $variantClass = $isSwitch
         ? 'rounded-full bg-left bg-origin-content checked:!bg-right ' . $switchOff . ' ' . $switchOn

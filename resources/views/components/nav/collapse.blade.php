@@ -6,7 +6,9 @@
 ])
 @php
     $currentPath = '/' . trim(request()->path(), '/');
-    $matchTo = rtrim($to, '/');
+    $toPath = parse_url($to, PHP_URL_PATH) ?: '/';
+    $matchTo = rtrim($toPath, '/');
+    $matchTo = $matchTo === '' ? '/' : $matchTo;
     $hereInitial = $to !== '/' && str_starts_with($currentPath, $matchTo);
     $base = 'mb-2 p-3 flex items-center cursor-pointer overflow-hidden rounded-xl hover:opacity-100 border grow transition-all duration-300 ease-in-out';
     $hereClass = 'text-zinc-950 dark:text-zinc-100 border-transparent';

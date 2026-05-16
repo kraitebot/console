@@ -33,7 +33,7 @@
 
 @layer base {
     :root {
-        font-size: 13px;
+        font-size: 15px;
     }
     html,
     body {
@@ -79,9 +79,4 @@
 
 @keyframes fade-in {
     from { opacity: 0; }
-}
-
-.turbo-progress-bar {
-    background-color: var(--color-primary-500);
-    height: 2px;
 }

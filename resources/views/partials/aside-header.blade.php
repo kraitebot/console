@@ -1,6 +1,7 @@
 <x-aside.head>
     <a
-        href="/"
+        href="{{ route('dashboard') }}"
+        wire:navigate
         aria-label="Kraite"
         class="flex items-center gap-2 overflow-hidden transition-all duration-300 ease-in-out"
         :class="$store.aside.status

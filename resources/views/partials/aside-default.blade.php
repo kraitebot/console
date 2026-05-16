@@ -8,32 +8,10 @@
     ];
 @endphp
 
-<x-aside id="aside-permanent" data-turbo-permanent>
+<x-aside id="aside-permanent">
     @include('partials.aside-header')
 
     <x-aside.body>
-        <div class="mb-4" x-show="$store.aside.status">
-            <x-form.field-wrap
-                first-icon="Search01"
-                :last-suffix="'<span class=\'text-sm text-zinc-500\'>⌘K</span>'"
-            >
-                <x-form.input
-                    name="search"
-                    type="search"
-                    placeholder="Search"
-                    class="!border-zinc-500/25 transition-all duration-300 ease-in-out hover:!border-zinc-500/50"
-                />
-            </x-form.field-wrap>
-        </div>
-        <button
-            type="button"
-            x-show="!$store.aside.status"
-            aria-label="Search"
-            class="mb-4 flex h-[44px] w-full items-center justify-center rounded-xl border border-zinc-500/25 text-zinc-500 hover:bg-zinc-500/10"
-        >
-            <x-icon name="Search01" size="text-xl" />
-        </button>
-
         <x-aside.quick-container>
             @foreach ($tabs as $tab)
                 <x-aside.quick-nav :icon="$tab['icon']" :tab-id="$tab['id']">

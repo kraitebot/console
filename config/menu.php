@@ -3,6 +3,7 @@
 return [
     'entities' => [
         'users' => ['id' => 'users', 'to' => '/users', 'text' => 'Users', 'icon' => 'UserMultiple'],
+        'accounts' => ['id' => 'accounts', 'to' => '/accounts', 'text' => 'Accounts', 'icon' => 'UserAccount'],
     ],
 
     'apps' => [

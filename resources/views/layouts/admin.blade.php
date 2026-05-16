@@ -33,3 +33,7 @@
         </x-header.right>
     </x-header>
 @endsection
+
+@section('content')
+    {{ $slot ?? '' }}
+@endsection

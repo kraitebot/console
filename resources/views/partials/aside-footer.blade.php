@@ -1,4 +1,10 @@
 <x-aside.footer>
+    @php
+        $user = auth()->user();
+        $name = $user?->name ?? 'Kraite User';
+        $role = $user?->is_admin ? 'Admin' : 'User';
+        $initial = mb_strtoupper(mb_substr($name, 0, 1));
+    @endphp
     <div
         data-component-name="User"
         class="relative"
@@ -9,13 +15,13 @@
         >
             <div class="flex cursor-pointer gap-4 p-3 text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all duration-300 ease-in-out">
                 <div class="bg-primary-500/25 text-primary-700 dark:text-primary-400 flex aspect-square h-12 w-12 items-center justify-center rounded-lg font-semibold">
-                    K
+                    {{ $initial }}
                 </div>
                 <div class="flex basis-full flex-wrap items-center truncate" x-show="$store.aside.status">
                     <div class="flex basis-full items-center gap-2 truncate">
-                        <span class="truncate font-semibold text-zinc-950 dark:text-zinc-100">Kraite User</span>
+                        <span class="truncate font-semibold text-zinc-950 dark:text-zinc-100">{{ $name }}</span>
                     </div>
-                    <div class="basis-full truncate text-xs first-letter:uppercase">admin</div>
+                    <div class="basis-full truncate text-xs first-letter:uppercase">{{ $role }}</div>
                 </div>
             </div>
         </div>
