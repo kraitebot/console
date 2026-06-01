@@ -2,6 +2,13 @@
 
 All notable changes to `console.kraite.com` are documented here.
 
+## v0.0.6 — 2026-06-01
+
+### Bug Fixes
+- [BUG FIX] **Tailwind v4 @source globs missed Livewire / vendor compiled Blade on a fresh-deploy build.** Pheme's first console build shipped a 105.9 KB CSS — 17 KB lighter than local — because the build ran with an empty `storage/framework/views/` (the compiled-Blade cache is populated by request, not by deploy). Tailwind v4's content scanner relies on that cache to see compiled vendor templates (Livewire et al.). `npm run build` therefore stripped utilities used only by those vendor templates (`h-screen`, `space-x-2`, several Livewire layout classes), and the dashboard sidebar rendered without horizontal flex / spacing — icons stacked under labels, skeleton loader floating. Fix has two parts:
+  1. `resources/css/app.css` @source list now also scans `app/**/*.php` and `routes/**/*.php` so class strings inside Livewire components and route definitions are picked up even when the view cache is empty.
+  2. The deploy procedure runs `php artisan view:cache` **before** `npm run build` so the storage/framework/views directory is populated and Tailwind scans the compiled vendor Blade output. With both in place the production CSS grows from 105.9 KB → 123.9 KB and matches local.
+
 ## v0.0.5 — 2026-06-01
 
 ### Features

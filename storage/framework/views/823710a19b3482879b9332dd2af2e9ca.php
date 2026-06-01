@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" color="currentColor" viewBox="0 0 24 24" class="svg-icon"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9s-4.419 6-6 6-6-6-6-6" /></svg>
+<?php /**PATH /Users/falcaob/Herd/console.kraite.test/resources/views/icons/ArrowDown01.blade.php ENDPATH**/ ?>

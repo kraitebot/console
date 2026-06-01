@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" color="currentColor" viewBox="0 0 24 24" class="svg-icon"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 8h8M11 12h5M11 16h3M11 4h10M5.5 21V3m0 18c-.7 0-2.008-1.994-2.5-2.5M5.5 21c.7 0 2.008-1.994 2.5-2.5" /></svg>
+<?php /**PATH /Users/falcaob/Herd/console.kraite.test/resources/views/icons/Sorting01.blade.php ENDPATH**/ ?>
