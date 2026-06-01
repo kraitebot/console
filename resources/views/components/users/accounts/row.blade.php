@@ -95,24 +95,24 @@
 
     <div x-show="expanded" x-collapse.duration.250ms x-cloak>
         <div class="border-t border-zinc-500/15 bg-white/70 px-4 py-5 dark:bg-zinc-950">
-            <div class="mb-5 flex flex-wrap items-center gap-2 border-b border-zinc-500/15 pb-4">
+            <div class="mb-5 flex flex-wrap items-center gap-2 border-b border-zinc-500/15 pb-4" role="tablist" aria-label="Account sections">
                 <button
                     type="button"
                     @click="accountTab = 'details'"
-                    class="cursor-pointer rounded-lg px-4 py-2 text-base font-semibold transition-all duration-300"
-                    :class="accountTab === 'details'
-                        ? 'bg-primary-500 text-zinc-900 shadow-[0_0_0_1px_rgba(102,255,76,0.35)]'
-                        : 'bg-zinc-500/10 text-zinc-500 hover:bg-primary-500/10 hover:text-primary-500'"
+                    class="users-account-subtab"
+                    role="tab"
+                    :aria-selected="accountTab === 'details'"
+                    :data-active="accountTab === 'details' ? 'true' : 'false'"
                 >
                     Details
                 </button>
                 <button
                     type="button"
                     @click="accountTab = 'connectivity'"
-                    class="cursor-pointer rounded-lg px-4 py-2 text-base font-semibold transition-all duration-300"
-                    :class="accountTab === 'connectivity'
-                        ? 'bg-primary-500 text-zinc-900 shadow-[0_0_0_1px_rgba(102,255,76,0.35)]'
-                        : 'bg-zinc-500/10 text-zinc-500 hover:bg-primary-500/10 hover:text-primary-500'"
+                    class="users-account-subtab"
+                    role="tab"
+                    :aria-selected="accountTab === 'connectivity'"
+                    :data-active="accountTab === 'connectivity' ? 'true' : 'false'"
                 >
                     Server connectivity
                 </button>

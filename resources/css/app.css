@@ -47,6 +47,45 @@
     }
 }
 
+@layer components {
+    .users-account-subtab {
+        cursor: pointer;
+        border-radius: 0.5rem;
+        border: 1px solid color-mix(in srgb, var(--color-zinc-500) 18%, transparent);
+        background: color-mix(in srgb, var(--color-zinc-500) 10%, transparent);
+        color: var(--color-zinc-600);
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        transition:
+            background-color 200ms ease,
+            border-color 200ms ease,
+            color 200ms ease,
+            box-shadow 200ms ease;
+    }
+
+    .users-account-subtab:hover {
+        border-color: color-mix(in srgb, var(--color-primary-500) 35%, transparent);
+        background: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+        color: var(--color-primary-500);
+    }
+
+    .users-account-subtab[data-active="true"] {
+        border-color: var(--color-primary-500);
+        background: var(--color-primary-500);
+        color: var(--color-zinc-950);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary-500) 35%, transparent);
+    }
+
+    .dark .users-account-subtab {
+        color: var(--color-zinc-300);
+    }
+
+    .dark .users-account-subtab[data-active="true"] {
+        color: var(--color-zinc-950);
+    }
+}
+
 @utility no-scrollbar {
     &::-webkit-scrollbar {
         display: none;

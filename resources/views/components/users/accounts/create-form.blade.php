@@ -34,7 +34,7 @@
     data-component-name="Users/AccountsCreateForm"
     wire:key="users-accounts-create-form"
     wire:transition.opacity.duration.200ms
-    class="mb-4 overflow-hidden rounded-xl border border-primary-500/25 bg-primary-500/5"
+    class="mb-4 overflow-hidden rounded-xl border border-zinc-500/15 bg-white dark:border-zinc-500/25 dark:bg-zinc-950"
 >
     <form wire:submit="saveNewAccount" class="p-4">
         <div class="mb-5 flex items-start justify-between gap-4">
@@ -80,12 +80,19 @@
                         <option value="{{ $configuration['id'] }}">{{ $configuration['canonical'] }}</option>
                     @endforeach
                 </x-form.select>
+                <p class="mt-2 text-sm leading-5 text-zinc-500">Strategy profile used by the lifecycle jobs. Standard is the default Kraite trading configuration.</p>
                 @error('newAccountForm.trade_configuration_id')
                     <p class="mt-2 text-sm text-red-500/70">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="col-span-12 mt-2 flex items-center gap-3">
+                <div class="h-px flex-1 bg-primary-500/20"></div>
+                <div class="rounded-full border border-primary-500/25 bg-primary-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-500">Quote and balance</div>
+                <div class="h-px flex-1 bg-primary-500/20"></div>
+            </div>
+
+            <div class="col-span-12 md:col-span-6 lg:col-span-4">
                 <x-form.label for="new-account-portfolio" class="!text-base">Portfolio Quote</x-form.label>
                 <x-form.select id="new-account-portfolio" name="newAccountForm.portfolio_quote" wire:model="newAccountForm.portfolio_quote" dimension="lg">
                     @foreach ($quoteOptions as $quote)
@@ -98,7 +105,7 @@
                 @enderror
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="col-span-12 md:col-span-6 lg:col-span-4">
                 <x-form.label for="new-account-trading" class="!text-base">Trading Quote</x-form.label>
                 <x-form.select id="new-account-trading" name="newAccountForm.trading_quote" wire:model="newAccountForm.trading_quote" dimension="lg">
                     @foreach ($quoteOptions as $quote)
@@ -111,16 +118,22 @@
                 @enderror
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="col-span-12 md:col-span-6 lg:col-span-4">
                 <x-form.label for="new-account-balance-basis" class="!text-base">Trade Using</x-form.label>
                 <x-form.select id="new-account-balance-basis" name="newAccountForm.balance_for_trading_basis" wire:model="newAccountForm.balance_for_trading_basis" dimension="lg">
                     <option value="total">Total Balance</option>
                     <option value="available">Available Balance</option>
                 </x-form.select>
-                <p class="mt-2 text-sm leading-5 text-zinc-500">Balance source used by Kraite when sizing new position margin.</p>
+                <p class="mt-2 text-sm leading-5 text-zinc-500">Total Balance uses the full wallet balance. Available Balance uses free balance after current position margin and open orders.</p>
                 @error('newAccountForm.balance_for_trading_basis')
                     <p class="mt-2 text-sm text-red-500/70">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <div class="col-span-12 mt-2 flex items-center gap-3">
+                <div class="h-px flex-1 bg-primary-500/20"></div>
+                <div class="rounded-full border border-primary-500/25 bg-primary-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-500">Margin and leverage</div>
+                <div class="h-px flex-1 bg-primary-500/20"></div>
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-3">
@@ -138,6 +151,7 @@
                     <option value="crossed">Crossed</option>
                     <option value="isolated">Isolated</option>
                 </x-form.select>
+                <p class="mt-2 text-sm leading-5 text-zinc-500">Crossed shares collateral across positions. Isolated keeps margin contained per position where the exchange supports it.</p>
                 @error('newAccountForm.margin_mode')
                     <p class="mt-2 text-sm text-red-500/70">{{ $message }}</p>
                 @enderror
@@ -167,7 +181,7 @@
                 @enderror
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="col-span-12 md:col-span-6">
                 <x-form.label for="new-account-long-margin" class="!text-base">Long Margin %</x-form.label>
                 <x-form.input id="new-account-long-margin" name="newAccountForm.margin_percentage_long" wire:model="newAccountForm.margin_percentage_long" wire:blur="clearNewAccountAbsoluteMargin" dimension="lg" inputmode="decimal" placeholder="5.00" />
                 <p class="mt-2 text-sm leading-5 text-zinc-500">Required when absolute margin is empty. Allowed range: 1.00% to 5.00%.</p>
@@ -176,7 +190,7 @@
                 @enderror
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="col-span-12 md:col-span-6">
                 <x-form.label for="new-account-short-margin" class="!text-base">Short Margin %</x-form.label>
                 <x-form.input id="new-account-short-margin" name="newAccountForm.margin_percentage_short" wire:model="newAccountForm.margin_percentage_short" wire:blur="clearNewAccountAbsoluteMargin" dimension="lg" inputmode="decimal" placeholder="5.00" />
                 <p class="mt-2 text-sm leading-5 text-zinc-500">Required when absolute margin is empty. Allowed range: 1.00% to 5.00%.</p>
@@ -185,14 +199,13 @@
                 @enderror
             </div>
 
-            <div class="col-span-12 rounded-xl border border-zinc-500/15 bg-zinc-950/[0.02] p-4 dark:bg-white/[0.02]">
-                <div class="mb-4 flex flex-col gap-1">
-                    <div class="text-base font-semibold text-zinc-900 dark:text-zinc-100">Exchange credentials</div>
-                    <p class="text-sm leading-5 text-zinc-500">
-                        {{ $selectedApiSystem['name'] ?? 'Selected exchange' }} only shows the credential fields used by that exchange.
-                    </p>
-                </div>
+            <div class="col-span-12 mt-2 flex items-center gap-3">
+                <div class="h-px flex-1 bg-primary-500/20"></div>
+                <div class="rounded-full border border-primary-500/25 bg-primary-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-500">Exchange credentials</div>
+                <div class="h-px flex-1 bg-primary-500/20"></div>
+            </div>
 
+            <div class="col-span-12 rounded-xl border border-zinc-500/15 bg-zinc-950/[0.02] p-4 dark:bg-white/[0.02]">
                 @if ($credentialFields === [])
                     <div class="rounded-lg border border-zinc-500/15 bg-zinc-500/10 px-4 py-3 text-base text-zinc-500">
                         No credential fields are configured for this exchange yet.

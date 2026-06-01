@@ -26,6 +26,14 @@ final class UserShow extends Component
     use LoadsTabsLazily;
     use WithFileUploads;
 
+    /**
+     * api_systems only distinguishes exchanges from non-exchanges today.
+     * Account creation is narrower: show only exchanges Kraite currently supports for new managed accounts.
+     *
+     * @var array<int, string>
+     */
+    private const ACCOUNT_CREATION_EXCHANGES = ['binance', 'bitget'];
+
     public User $user;
 
     public string $name = '';
@@ -651,7 +659,8 @@ final class UserShow extends Component
         if ($this->accountApiSystemOptions === []) {
             $this->accountApiSystemOptions = DB::table('api_systems')
                 ->where('is_exchange', true)
-                ->orderByRaw("CASE canonical WHEN 'binance' THEN 0 WHEN 'bybit' THEN 1 WHEN 'kucoin' THEN 2 WHEN 'bitget' THEN 3 ELSE 4 END")
+                ->whereIn('canonical', self::ACCOUNT_CREATION_EXCHANGES)
+                ->orderByRaw("CASE canonical WHEN 'binance' THEN 0 WHEN 'bitget' THEN 1 ELSE 2 END")
                 ->orderBy('name')
                 ->get(['id', 'name', 'canonical'])
                 ->map(fn (object $apiSystem): array => [

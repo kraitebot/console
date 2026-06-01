@@ -30,10 +30,8 @@ test('user sub-tabs show counts and lazy-load accounts', async ({ page }) => {
     await expect(page.locator('#new-account-api-key')).toBeVisible();
     await expect(page.locator('#new-account-api-secret')).toBeVisible();
     await expect(page.locator('#new-account-api-passphrase')).toHaveCount(0);
-    await page.locator('#new-account-api-system').selectOption({ label: 'KuCoin' });
-    await expect(page.locator('#new-account-api-passphrase')).toBeVisible();
-    await page.locator('#new-account-api-system').selectOption({ label: 'Bybit' });
-    await expect(page.locator('#new-account-api-passphrase')).toHaveCount(0);
+    await expect(page.locator('#new-account-api-system')).not.toContainText('KuCoin');
+    await expect(page.locator('#new-account-api-system')).not.toContainText('Bybit');
     await page.locator('#new-account-api-system').selectOption({ label: 'BitGet' });
     await expect(page.locator('#new-account-api-passphrase')).toBeVisible();
     await page.getByRole('button', { name: 'Cancel' }).click();
@@ -51,11 +49,22 @@ test('user sub-tabs show counts and lazy-load accounts', async ({ page }) => {
     await expect(page.locator('#account-1-short-margin')).toHaveAttribute('type', 'text');
     await expect(page.locator('#account-1-short-margin')).toHaveAttribute('inputmode', 'decimal');
 
-    await page.locator('[data-component-name="Users/AccountsRow"]').getByRole('button', { name: 'Server connectivity' }).click();
+    const accountRow = page.locator('[data-component-name="Users/AccountsRow"]');
+    const detailsTab = accountRow.getByRole('tab', { name: 'Details' });
+    const connectivityTab = accountRow.getByRole('tab', { name: 'Server connectivity' });
+
+    await expect(detailsTab).toHaveAttribute('data-active', 'true');
+    await expect(connectivityTab).toHaveAttribute('data-active', 'false');
+
+    await connectivityTab.click();
+    await expect(detailsTab).toHaveAttribute('data-active', 'false');
+    await expect(connectivityTab).toHaveAttribute('data-active', 'true');
     await expect(page.getByRole('button', { name: 'Test servers connectivity' })).toBeVisible();
     await expect(page.locator('#account-1-name')).not.toBeVisible();
 
-    await page.locator('[data-component-name="Users/AccountsRow"]').getByRole('button', { name: 'Details' }).click();
+    await detailsTab.click();
+    await expect(detailsTab).toHaveAttribute('data-active', 'true');
+    await expect(connectivityTab).toHaveAttribute('data-active', 'false');
     await expect(page.locator('#account-1-name')).toBeVisible();
 
     await page.locator('#account-1-margin').fill('100');

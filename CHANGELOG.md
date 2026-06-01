@@ -2,6 +2,14 @@
 
 All notable changes to `console.kraite.com` are documented here.
 
+## v0.0.5 — 2026-06-01
+
+### Features
+- [NEW FEATURE] **`laravel/horizon` installed.** `composer require laravel/horizon` + `php artisan horizon:install` scaffolds Service Provider + `config/horizon.php`. Console gets its own Horizon master on pheme so its queued jobs run under console's autoloader — cross-app queue consumption is unsafe because each Laravel app's Job classes live only in its own vendor tree.
+
+### Improvements
+- [IMPROVED] **`config/horizon.php` reads `HORIZON_ENV` for the environments block.** Adds `'env' => env('HORIZON_ENV', env('APP_ENV', 'production'))` so the master picks `environments.<HORIZON_ENV>` (rewritten at boot by `kraitebot/core`'s transformer from `kraite.horizon.workers.<HORIZON_ENV>`). Without this, Horizon would look up `environments.production` (absent in the kraite topology) and the master would report "No supervisors are running".
+
 ## v0.0.4 — 2026-05-17
 
 ### Features
